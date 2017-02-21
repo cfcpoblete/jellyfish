@@ -21,13 +21,29 @@ echo "
 <body>
 ";
 
+
+
+
  echo '<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header">
          <div class="mdl-layout__header-row">
             <!-- Title -->
-            <span class="mdl-layout-title">
-               <a class="mdl-navigation__link" href="account.php">Learn</a>
+		 	<span class="mdl-layout-title">
+               <a class="mdl-navigation__link" href="account.php">Home</a>
+            </span>            
+		
+			<span class="mdl-layout-title">
+               <a class="mdl-navigation__link" href="admin.php">Administrator</a>
             </span>
+
+            <span class="mdl-layout-title">
+               <a class="mdl-navigation__link" href="order.php">Order</a>   
+            </span>
+
+            <span class="mdl-layout-title">
+               <a class="mdl-navigation__link" href="complete_order.php">Complete Order</a>
+            </span>
+
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
             <!-- Navigation -->
@@ -42,6 +58,7 @@ echo "
       <div class="mdl-layout__drawer">
          <span class="mdl-layout-title">Learn</span>
          <nav class="mdl-navigation">';
+
 
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
