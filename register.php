@@ -15,8 +15,12 @@ if(!empty($_POST))
 {
 	$errors = array();
 	$email = trim($_POST["email"]);
-	$username = trim($_POST["username"]);
-	$displayname = trim($_POST["displayname"]);
+	$userrname = trim($_POST["email"]);
+
+	$fName = trim($_POST["firstName"]);
+	$lName = trim($_POST["lastName"]);
+	$address = trim($_POST["address"]);
+
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
 	//$captcha = md5($_POST["captcha"]);
@@ -25,21 +29,20 @@ if(!empty($_POST))
 	//if ($captcha != $_SESSION['captcha'])
 	//{
 	//	$errors[] = lang("CAPTCHA_FAIL");
-	//}
-	if(minMaxRange(5,25,$username))
-	{
-		$errors[] = lang("ACCOUNT_USER_CHAR_LIMIT",array(5,25));
-	}
-	if(!ctype_alnum($username)){
-		$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
-	}
-	if(minMaxRange(5,25,$displayname))
-	{
-		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(5,25));
-	}
-	if(!ctype_alnum($displayname)){
+	//}	
+	// if(!ctype_alnum($username)){
+	// 	$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
+	// }
+
+
+	if(!ctype_alnum($fName)){
 		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
 	}
+
+	if(!ctype_alnum($lName)){
+		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
+	}
+
 	if(minMaxRange(8,50,$password) && minMaxRange(8,50,$confirm_pass))
 	{
 		$errors[] = lang("ACCOUNT_PASS_CHAR_LIMIT",array(8,50));
@@ -55,8 +58,10 @@ if(!empty($_POST))
 	//End data validation
 	if(count($errors) == 0)
 	{	
+		$disId = addCustomer($fName,$lName,$address);
+
 		//Construct a user object
-		$user = new User($username,$displayname,$password,$email);
+		$user = new User($username,$disId,$password,$email);
 		
 		//Checking this flag tells us whether there were any errors such as possible data duplication occured
 		if(!$user->status)
@@ -84,31 +89,45 @@ echo resultBlock($errors,$successes);
 
 echo "
 <div id='regbox'>
+
+<h3>Create your Customer Account</h3>
+
 <form name='newUser' action='".$_SERVER['PHP_SELF']."' method='post'>
 
-<p>
-<label>User Name:</label>
-<input type='text' name='username' />
-</p>
-<p>
-<label>Display Name:</label>
-<input type='text' name='displayname' />
-</p>
-<p>
-<label>Password:</label>
-<input type='password' name='password' />
-</p>
-<p>
-<label>Confirm:</label>
-<input type='password' name='passwordc' />
-</p>
-<p>
-<label>Email:</label>
-<input type='text' name='email' />
-</p>
-<label>&nbsp;<br>
-<input type='submit' value='Register'/>
-</p>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='email' name='email' id='email'>
+    <label class='mdl-textfield__label' for='email'>Email</label>
+  </div><br>
+
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='password' name='password' id='password'>
+    <label class='mdl-textfield__label' for='password'>Password</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='password' name='passwordc' id='passwordc'>
+    <label class='mdl-textfield__label' for='passwordc'>Confirm Password</label>
+  </div><br>
+
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='firstName' id='firstName'>
+    <label class='mdl-textfield__label' for='lastName'>First Name</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='lastName' id='lastName'>
+    <label class='mdl-textfield__label' for='lastName'>Last Name</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='address' id='address'>
+    <label class='mdl-textfield__label' for='address'>Address</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='contactNumber' pattern='-?[0-9]*(\.[0-9]+)?' id='contactNumber'>
+    <label class='mdl-textfield__label' for='contactNumber'>Contact Number</label>
+    <span class='mdl-textfield__error'>Input is not a number!</span>
+  </div>
+
+<br><br>
+	<input class='mdl-button mdl-js-button mdl-button--raised mdl-button--colored' type='submit' value='Register'/>
 
 </form>
 </div>

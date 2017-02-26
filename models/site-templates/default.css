@@ -117,3 +117,14 @@ table.admin td {
 	border: 1px solid #7ace6c;
 	font-size:90%;
 }
+
+.mdl-layout__header-row .material-icons.mdl-badge {
+    margin: 10px;
+    cursor: pointer;
+    overflow: visible;
+    text-align: center;
+    height: 24px;
+    width: 24px;
+    min-width: 0;
+    padding: 4px 4px;
+}

@@ -89,7 +89,7 @@ echo "
 <div id='regbox'>
 <form name='login' action='".$_SERVER['PHP_SELF']."' method='post'>
 <p>
-<label>Username:</label>
+<label>Email:</label>
 <input type='text' name='username' />
 </p>
 <p>

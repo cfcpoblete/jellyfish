@@ -1,6 +1,5 @@
 /*
-UserCake Version: 2.0.2
-http://usercake.com
+New test app
 */
 function showHide(div){
 	if(document.getElementById(div).style.display = 'block'){
@@ -9,3 +8,57 @@ function showHide(div){
 		document.getElementById(div).style.display = 'block'; 
 	}
 }
+
+
+function loadValues(num){
+	var init = [];
+	for (var i = 0; i < num; i++) {
+		init.push("0");
+	}
+	document.getElementById("figures").value = init;
+}
+
+function inc(num){
+	var v = Number(document.getElementById("v" + num).innerHTML) + 1;
+	var figures = document.getElementById("figures").value.split(",");
+
+	figures[num - 1] = v;
+	document.getElementById("figures").value = figures;	
+	document.getElementById("v" + num).innerHTML = v;
+	document.getElementById("t" + num).innerHTML = v * parseFloat(document.getElementById("p" + num).innerHTML);
+	totalValue();
+}
+
+function dec(num){
+	var v = Number(document.getElementById("v" + num).innerHTML) - 1;
+	if(v >= 0){
+		var figures = document.getElementById("figures").value.split(",");
+
+		figures[num - 1] = v;
+		document.getElementById("figures").value = figures;	
+		document.getElementById("v" + num).innerHTML = v;
+		document.getElementById("t" + num).innerHTML = v * parseFloat(document.getElementById("p" + num).innerHTML);
+	}
+	totalValue();
+}
+
+function totalValue(){
+	var sum = 0;
+	for (var i = 1; i < 20; i++) {
+		try {
+		    sum = sum + parseFloat(document.getElementById("t" + i).innerHTML);
+		}
+		catch(err) {
+		    break;
+		}
+	}
+	if(sum > 0)
+	{
+		document.getElementById("total").innerHTML = "Buy PHP " + sum;
+	}
+	else
+	{
+		document.getElementById("total").innerHTML = "ORDER NOW";
+	}
+}
+

@@ -305,11 +305,11 @@ function fetchAllUsers()
 }
 
 //Retrieve complete user information by username, token or ID
-function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
+function fetchUserDetails($email=NULL,$token=NULL, $id=NULL)
 {
-	if($username!=NULL) {
-		$column = "user_name";
-		$data = $username;
+	if($email!=NULL) {
+		$column = "email";
+		$data = $email;
 	}
 	elseif($token!=NULL) {
 		$column = "activation_token";
@@ -527,7 +527,7 @@ function usernameExists($username)
 	$stmt = $mysqli->prepare("SELECT active
 		FROM ".$db_table_prefix."users
 		WHERE
-		user_name = ?
+		email = ?
 		LIMIT 1");
 	$stmt->bind_param("s", $username);	
 	$stmt->execute();
@@ -1285,33 +1285,6 @@ function fetchAllQuestions()
 	return ($row);
 }
 
-//Retrieve complete user information by username, token or ID
-function fetchQuestion($question)
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT 
-		qdescription,
-		qcategory,
-		qsubcategory,
-		qanswer,
-		qc1,
-		qc2,
-		qc3,
-		qremarks,
-		qstrike
-		FROM ".$db_table_prefix."questions
-		WHERE
-		qid = ? LIMIT 1");
-		$stmt->bind_param("i", $question);
-		$stmt->execute();
-		$stmt->bind_result($qdescription, $qcategory, $qsubcategory, $qanswer, $qc1, $qc2, $qc3, $qremarks, $qstrike);
-		while ($stmt->fetch()){
-			$row[] = array('qdescription' => $qdescription, 'qcategory' => $qcategory, 'qsubcategory' => $qsubcategory, 'qanswer' => $qanswer, 'qc1' => $qc1, 'qc2' => $qc2, 'qc3' => $qc3, 'qremarks' => $qremarks, 'qstrike' => $qstrike);
-		}
-	$stmt->close();
-	return ($row);
-}
-
 //submit answer
 function questionSubmit($qid, $qanswer, $user)
 {
@@ -1448,5 +1421,136 @@ function deleteQuestions($qid) {
 	}
 	$stmt->close();
 	return $i;
+}
+
+function addCustomer($fName,$lName,$address)
+{
+	global $mysqli,$db_table_prefix,$errors; 
+	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."customer (
+	customer_lname,
+	customer_fname,
+	customer_address
+	)
+	VALUES (
+	?,
+	?,
+	?
+	)");
+	$stmt->bind_param("sss", $fName,$lName,$address);
+	$stmt->execute(); 
+	$inserted_id = $mysqli->insert_id;
+	$stmt->close();
+	return $inserted_id;
+}
+
+//Create Product
+function productCreate($prod,$des,$cat,$pri,$sup) {
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."product (
+		prod_name,
+		prod_category,
+		prod_description,
+		prod_price,
+		supp_id
+		)
+		VALUES (
+		?,
+		?,
+		?,
+		?,
+		?
+		)");
+		$stmt->bind_param("ssssi",$prod,$des,$cat,$pri,$sup);
+		$stmt->execute(); 
+		$inserted_id = $mysqli->insert_id;
+		$stmt->close();
+
+		//createChoice($inserted_id, $ra, 1, 0);
+}
+
+//Retrieve product information via ProductID
+function productFetchAll()
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		prod_id,
+		prod_name,
+		prod_category,
+		prod_description,
+		prod_price,
+		supp_id FROM ".$db_table_prefix.'product');
+		$stmt->execute();
+		$stmt->bind_result($prod_id, $prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
+		while ($stmt->fetch()){
+			$row[] = array('prod_id' => $prod_id,'prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
+		}
+	$stmt->close();
+	return ($row);
+}
+
+//Retrieve product information via ProductID
+function productFetch()
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		prod_name,
+		prod_category,
+		prod_description,
+		prod_price,
+		supp_id
+		FROM ".$db_table_prefix."product
+		WHERE
+		product_id = ? LIMIT 1");
+		$stmt->bind_param("i", $pid);
+		$stmt->execute();
+		$stmt->bind_result($prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
+		while ($stmt->fetch()){
+			$row[] = array('prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
+		}
+	$stmt->close();
+	return ($row);
+}
+
+//Place Order
+function orderCreate($order,$lName)
+{
+	$num = explode(" ",$order);
+
+	for ($x = 0; $x <= count($num); $x++) {
+		//ask for quantity
+		global $mysqli,$db_table_prefix,$errors; 
+		$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."transaction (
+		customer_lname,
+		customer_fname,
+		customer_address
+		)
+		VALUES (
+		?,
+		?,
+		?
+		)");
+		$stmt->bind_param("sss", $fName,$lName,$address);
+		$stmt->execute(); 
+		$stmt->close();
+		return result;
+	}
+}
+//Place Order
+function supplierCreate($supp_name,$supp_address,$supp_contact)
+{
+	global $mysqli,$db_table_prefix,$errors; 
+	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."supplier (
+	supp_name,
+	supp_address,
+	supp_contact
+	)
+	VALUES (
+	?,
+	?,
+	?
+	)");
+	$stmt->bind_param("sss", $supp_name,$supp_address,$supp_contact);
+	$stmt->execute(); 
+	$stmt->close();
 }
 ?>

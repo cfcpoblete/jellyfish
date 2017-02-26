@@ -1,6 +1,7 @@
-<?php include('header.php'); ?>
-<?php include('session.php'); ?>
-<?php include 'admin/connect.php'; ?>
+<?php 
+ include('header.php'); 
+ include('session.php');
+ include 'admin/connect.php'; ?>
 <body>
     <?php
     include('navtop.php');

@@ -1,26 +1,26 @@
 <?php
-include('admin/connect.php');
-include('session.php');
-$get_id=$_GET['id'];
+// include('admin/connect.php');
+// include('session.php');
+// $get_id=$_GET['id'];
 
 			
-						function createRandomPassword() {
-					$chars = "abcdefghijkmnopqrstuvwxyz023456789";
-					srand((double)microtime()*1000000);
-					$i = 0;
-					$pass = '' ;
-					while ($i <= 7) {
-						$num = rand() % 33;
-						$tmp = substr($chars, $num, 1);
-						$pass = $pass . $tmp;
-						$i++;
-					}
-					return $pass;
-				}
-				$confirmation = createRandomPassword();
+// 						function createRandomPassword() {
+// 					$chars = "abcdefghijkmnopqrstuvwxyz023456789";
+// 					srand((double)microtime()*1000000);
+// 					$i = 0;
+// 					$pass = '' ;
+// 					while ($i <= 7) {
+// 						$num = rand() % 33;
+// 						$tmp = substr($chars, $num, 1);
+// 						$pass = $pass . $tmp;
+// 						$i++;
+// 					}
+// 					return $pass;
+// 				}
+// 				$confirmation = createRandomPassword();
 						
 
-mysql_query("update order_details set status='Pending',transaction_code='$confirmation',modeofpayment='Online' where MemberID='$get_id'")or die(mysql_error());
+// mysql_query("update order_details set status='Pending',transaction_code='$confirmation',modeofpayment='Online' where MemberID='$get_id'")or die(mysql_error());
 ?>
 
 <?php include('header.php'); ?>

@@ -10,50 +10,43 @@ echo "
 <head>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <title>".$websiteName."</title>
-<link href='".$template."' rel='stylesheet' type='text/css' />
-<link rel='stylesheet' href='".$externalCss."'>
 <link rel='stylesheet' href='". $font ."'>
 <script src='models/funcs.js' type='text/javascript'></script>
 <script src='".$externalJs."' type='text/javascript'></script>
- <link rel='stylesheet' href='".$icons."'>
- 
-</head>
-<body>
+<link rel='stylesheet' href='".$icons."'>
+<link rel='stylesheet' href='".$externalCss."'>
+<link href='".$template."' rel='stylesheet' type='text/css' />
+
 ";
 
+// echo "
+// <link rel='stylesheet' href='app/css/lib/getmdl-select.min.css'>
+// <link rel='stylesheet' href='app/css/lib/nv.d3.css'>
+// <link rel='stylesheet' href='app/css/application.css'>
+// </head>
+// <body>
+// ";
 
 
-
- echo '<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+ echo '
+ <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header">
          <div class="mdl-layout__header-row">
-            <!-- Title -->
-		 	<span class="mdl-layout-title">
-               <a class="mdl-navigation__link" href="account.php">Home</a>
-            </span>            
-		
-			<span class="mdl-layout-title">
-               <a class="mdl-navigation__link" href="admin.php">Administrator</a>
-            </span>
-
-            <span class="mdl-layout-title">
-               <a class="mdl-navigation__link" href="order.php">Order</a>   
-            </span>
-
-            <span class="mdl-layout-title">
-               <a class="mdl-navigation__link" href="complete_order.php">Complete Order</a>
-            </span>
-
-            <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
-            <!-- Navigation -->
-            <nav class="mdl-navigation">
+            <!-- Title -->
+
             ';  
 
 
 
- echo       '</nav>
-         </div>
+ echo 
+ '
+   <!-- Add spacer, to align navigation to the right -->
+   <div class="mdl-layout-spacer"></div>
+   <!-- Navigation -->
+      <nav class="mdl-navigation">
+      </nav>
+   </div>
       </header>
       <div class="mdl-layout__drawer">
          <span class="mdl-layout-title">Learn</span>
@@ -65,15 +58,18 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 //Links for logged in user
 if(isUserLoggedIn()) {
    echo "
-   <a class='mdl-navigation__link' href='user_settings.php' style='color:gray'>User Settings</a>
-   <a class='mdl-navigation__link' href='question_create.php' style='color:gray'>Create Question</a>
-   <a class='mdl-navigation__link' href='quizGame.php' style='color:gray'>Answer Question</a>
+   <a class='mdl-navigation__link' href='complete_order.php' style='color:gray'>Complete Order</a>
+   <a class='mdl-navigation__link' href='orderList.php' style='color:gray'>Order</a>  
+   <a class='mdl-navigation__link' href='user_settings.php' style='color:gray'>User Settings</a>   
    <a class='mdl-navigation__link' href='logout.php' style='color:gray'>Logout</a>
    ";
    
    //Links for permission level 2 (default admin)
    if ($loggedInUser->checkPermission(array(2))){
    echo "
+   <a class='mdl-navigation__link' href='supplierAdd.php' style='color:gray'>Add Supplier</a>
+   <a class='mdl-navigation__link' href='inventory.php' style='color:gray'>Inventory</a>
+   <a class='mdl-navigation__link' href='productCreate.php' style='color:gray'>Create Product</a>
    <a class='mdl-navigation__link' href='admin_configuration.php' style='color:gray'>Admin Configuration</a>
    <a class='mdl-navigation__link' href='admin_users.php' style='color:gray'>Admin Users</a>
    <a class='mdl-navigation__link' href='admin_permissions.php' style='color:gray'>Admin Permissions</a>
