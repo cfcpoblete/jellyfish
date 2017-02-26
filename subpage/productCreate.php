@@ -13,7 +13,7 @@ if(!empty($_POST))
 	{
 		$errors[] = "Please insert Product";
 	}
-	if(empty($des))
+	if(empty(var)($des))
 	{
 		$errors[] = "Please insert Description";
 	}
@@ -43,6 +43,13 @@ if(!empty($_POST))
 	
 }
 
+$data = "<option value=''></option>";
+$supplierFetchAll = supplierFetchAll(); //Retrieve list of all supplier
+		foreach ($supplierFetchAll as $v1) {
+			$data = $data ."<option value='". $v1['supp_id'] ."'>". $v1['supp_address'] ."</option>";
+		}
+
+
 echo "
 <h5>Add Product</h5>
 <div id='regbox'>
@@ -67,7 +74,11 @@ echo "
   <textarea class='mdl-textfield__input' type='text' rows='1' id='pPrice' name='pPrice'></textarea>
   <label class='mdl-textfield__label' for='pPrice'>Price</label>
 </div>
-
+<br>
+<div class='mdl-select mdl-js-select mdl-select--floating-label'>
+	<select class='mdl-select__input' id='supplier' name='supplier'>
+		<option value=''></option>". $data ."</select>
+</div>
 </div>
 
 <br><br>

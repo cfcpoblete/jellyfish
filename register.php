@@ -15,7 +15,7 @@ if(!empty($_POST))
 {
 	$errors = array();
 	$email = trim($_POST["email"]);
-	$userrname = trim($_POST["email"]);
+	$username = trim($_POST["email"]);
 
 	$fName = trim($_POST["firstName"]);
 	$lName = trim($_POST["lastName"]);

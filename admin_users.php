@@ -35,7 +35,7 @@ foreach ($userData as $v1) {
 	echo "
 	<tr>
 	<td><input type='checkbox' name='delete[".$v1['id']."]' id='delete[".$v1['id']."]' value='".$v1['id']."'></td>
-	<td><a href='admin_user.php?id=".$v1['id']."'>".$v1['user_name']."</a></td>
+	<td><a href='admin_user.php?id=".$v1['id']."'>".$v1['email']."</a></td>
 	<td>".$v1['display_name']."</td>
 	<td>".$v1['title']."</td>
 	<td>

@@ -1553,4 +1553,22 @@ function supplierCreate($supp_name,$supp_address,$supp_contact)
 	$stmt->execute(); 
 	$stmt->close();
 }
+
+//Retrieve supplier data
+function supplierFetchAll()
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		supp_id,
+		supp_name,
+		supp_address
+		FROM ".$db_table_prefix.'supplier');
+		$stmt->execute();
+		$stmt->bind_result($supp_id, $supp_name, $supp_address);
+		while ($stmt->fetch()){
+			$row[] = array('supp_id' => $supp_id,'supp_name' => $supp_name, 'supp_address' => $supp_address);
+		}
+	$stmt->close();
+	return ($row);
+}
 ?>
