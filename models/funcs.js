@@ -25,7 +25,8 @@ function inc(num){
 	figures[num - 1] = v;
 	document.getElementById("figures").value = figures;	
 	document.getElementById("v" + num).innerHTML = v;
-	document.getElementById("t" + num).innerHTML = v * parseFloat(document.getElementById("p" + num).innerHTML);
+	v = v * parseFloat(document.getElementById("p" + num).innerHTML);
+	document.getElementById("t" + num).innerHTML = parseFloat(Math.round(v.toFixed(2) * 100) / 100).toFixed(2);
 	totalValue();
 }
 
@@ -37,7 +38,8 @@ function dec(num){
 		figures[num - 1] = v;
 		document.getElementById("figures").value = figures;	
 		document.getElementById("v" + num).innerHTML = v;
-		document.getElementById("t" + num).innerHTML = v * parseFloat(document.getElementById("p" + num).innerHTML);
+		v = v * parseFloat(document.getElementById("p" + num).innerHTML);
+		document.getElementById("t" + num).innerHTML = parseFloat(Math.round(v.toFixed(2) * 100) / 100).toFixed(2);
 	}
 	totalValue();
 }
@@ -54,7 +56,7 @@ function totalValue(){
 	}
 	if(sum > 0)
 	{
-		document.getElementById("total").innerHTML = "Buy PHP " + sum;
+		document.getElementById("total").innerHTML = "Buy for PHP " + sum.toFixed(2);
 	}
 	else
 	{

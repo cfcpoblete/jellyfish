@@ -7,13 +7,14 @@ if(!empty($_POST))
 	$des = trim($_POST["pDescription"]);	
 	$cat = trim($_POST["pCategory"]);
 	$pri = trim($_POST["pPrice"]);
-	$sup = 1;
+	$sup = trim($_POST["pSupplier"]);
+
 
 	if(empty($prod))
 	{
 		$errors[] = "Please insert Product";
 	}
-	if(empty(var)($des))
+	if(empty($des))
 	{
 		$errors[] = "Please insert Description";
 	}
@@ -25,6 +26,11 @@ if(!empty($_POST))
 	{
 		$errors[] = "Please insert Price";
 	}
+	if(empty($sup))
+	{
+		$errors[] = "Please insert Supplier";
+	}
+
 
 	if(count($errors) == 0)
 	{	
@@ -40,13 +46,12 @@ if(!empty($_POST))
 		}
 		echo "</script>";
 	}
-	
 }
 
-$data = "<option value=''></option>";
+$data = "";
 $supplierFetchAll = supplierFetchAll(); //Retrieve list of all supplier
 		foreach ($supplierFetchAll as $v1) {
-			$data = $data ."<option value='". $v1['supp_id'] ."'>". $v1['supp_address'] ."</option>";
+			$data = $data ."<option value='". $v1['supp_id'] ."'>". $v1['supp_name'] ."</option>";
 		}
 
 
@@ -75,8 +80,8 @@ echo "
   <label class='mdl-textfield__label' for='pPrice'>Price</label>
 </div>
 <br>
-<div class='mdl-select mdl-js-select mdl-select--floating-label'>
-	<select class='mdl-select__input' id='supplier' name='supplier'>
+Supplier Name:<div class='mdl-select mdl-js-select mdl-select--floating-label'>
+	<select class='mdl-select__input' id='supplier' name='pSupplier'>
 		<option value=''></option>". $data ."</select>
 </div>
 </div>

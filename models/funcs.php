@@ -1512,30 +1512,6 @@ function productFetch()
 }
 
 //Place Order
-function orderCreate($order,$lName)
-{
-	$num = explode(" ",$order);
-
-	for ($x = 0; $x <= count($num); $x++) {
-		//ask for quantity
-		global $mysqli,$db_table_prefix,$errors; 
-		$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."transaction (
-		customer_lname,
-		customer_fname,
-		customer_address
-		)
-		VALUES (
-		?,
-		?,
-		?
-		)");
-		$stmt->bind_param("sss", $fName,$lName,$address);
-		$stmt->execute(); 
-		$stmt->close();
-		return result;
-	}
-}
-//Place Order
 function supplierCreate($supp_name,$supp_address,$supp_contact)
 {
 	global $mysqli,$db_table_prefix,$errors; 
@@ -1567,6 +1543,116 @@ function supplierFetchAll()
 		$stmt->bind_result($supp_id, $supp_name, $supp_address);
 		while ($stmt->fetch()){
 			$row[] = array('supp_id' => $supp_id,'supp_name' => $supp_name, 'supp_address' => $supp_address);
+		}
+	$stmt->close();
+	return ($row);
+}
+
+//Place Order
+function orderCreate($order,$prodId,$user)
+{
+	global $mysqli,$db_table_prefix; 
+	$o = explode(",",$order);
+	$p = explode(",",$order);
+	$stat = 0;
+	$num = 0;
+
+	for ($j = 0; $j < count($o); $j++) {
+
+		if($o[$j] > 0)
+		{
+			$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."shipment (
+			customer_id,
+			status
+			)
+			VALUES (
+			?,
+			?
+			)");
+			$stmt->bind_param("ii", $user, $num);
+			$stmt->execute();
+			$shipment_id = $mysqli->insert_id;
+			$stmt->close();
+
+			$fetch = fetchProductDetails($p[$j]);
+
+			// echo $shipment_id ." ";
+			// echo $p[$j] ." ";
+			// echo $fetch['prod_price'] ." ";
+			// echo $o[$j] ." ";
+
+
+			$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."transaction (
+			shipment_id,
+			prod_id,
+			amount,
+			quantity,
+			user_id
+			)
+			VALUES (
+			?,
+			?,
+			?,
+			?,
+			?
+			)");
+			$stmt->bind_param("iiiii", $shipment_id, $p[$j], $fetch['prod_price'], $o[$j],$user);
+			$stmt->execute();
+			$stmt->close();			
+
+			$stat = 1;
+		}
+
+	}
+
+	if($stat == 0)
+		{		
+			return "Kindly place your Order";
+		}
+	else
+		{
+			return "Order has been Submitted";
+		}
+}
+
+//Retrieve fetch product id information
+function fetchProductDetails($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		prod_price
+		FROM ".$db_table_prefix."product
+		WHERE
+		prod_id = ?
+		LIMIT 1");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($prod_price);
+	while ($stmt->fetch()){
+		$row = array('prod_price' => $prod_price);
+	}
+	$stmt->close();
+	return ($row);
+}
+
+//Retrieve transaction information via type of user
+function orderFetchAll($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		prod_name,
+		prod_category,
+		prod_description,
+		prod_price,
+		supp_id
+		FROM ".$db_table_prefix."product
+		WHERE
+		product_id = ? LIMIT 1");
+		$stmt->bind_param("i", $pid);
+		$stmt->execute();
+		$stmt->bind_result($prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
+		while ($stmt->fetch()){
+			$row[] = array('prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
 		}
 	$stmt->close();
 	return ($row);

@@ -58,7 +58,7 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 //Links for logged in user
 if(isUserLoggedIn()) {
    echo "
-   <a class='mdl-navigation__link' href='complete_order.php' style='color:gray'>Complete Order</a>
+   <a class='mdl-navigation__link' href='orderCreate.php' style='color:gray'>Order Now</a>
    <a class='mdl-navigation__link' href='orderList.php' style='color:gray'>Order</a>  
    <a class='mdl-navigation__link' href='user_settings.php' style='color:gray'>User Settings</a>   
    <a class='mdl-navigation__link' href='logout.php' style='color:gray'>Logout</a>
