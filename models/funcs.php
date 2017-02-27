@@ -818,7 +818,7 @@ function fetchUserPermissions($user_id)
 }
 
 //Retrieve list of users who have a permission level
-function fetchPermissionUsers($permission_id)
+function Users($permission_id)
 {
 	global $mysqli,$db_table_prefix; 
 	$stmt = $mysqli->prepare("SELECT id, user_id
@@ -1443,6 +1443,30 @@ function addCustomer($fName,$lName,$address)
 	return $inserted_id;
 }
 
+function addAddress($Muser,$Maddress,$MCity,$Mregion,$MpostalCode)
+{
+	global $mysqli,$db_table_prefix,$errors; 
+	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."address (
+	id_address,
+	address,
+	city,
+	region,
+	postalCode
+	)
+	VALUES (
+	?,
+	?,
+	?,
+	?,
+	?
+	)");
+	$stmt->bind_param("isssi", $Muser,$Maddress,$MCity,$Mregion,$MpostalCode);
+	$stmt->execute(); 
+	$inserted_id = $mysqli->insert_id;
+	$stmt->close();
+	return $inserted_id;
+}
+
 //Create Product
 function productCreate($prod,$des,$cat,$pri,$sup) {
 	global $mysqli,$db_table_prefix; 
@@ -1483,29 +1507,6 @@ function productFetchAll()
 		$stmt->bind_result($prod_id, $prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
 		while ($stmt->fetch()){
 			$row[] = array('prod_id' => $prod_id,'prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
-		}
-	$stmt->close();
-	return ($row);
-}
-
-//Retrieve product information via ProductID
-function productFetch()
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT 
-		prod_name,
-		prod_category,
-		prod_description,
-		prod_price,
-		supp_id
-		FROM ".$db_table_prefix."product
-		WHERE
-		product_id = ? LIMIT 1");
-		$stmt->bind_param("i", $pid);
-		$stmt->execute();
-		$stmt->bind_result($prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
-		while ($stmt->fetch()){
-			$row[] = array('prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
 		}
 	$stmt->close();
 	return ($row);
@@ -1636,25 +1637,138 @@ function fetchProductDetails($id)
 }
 
 //Retrieve transaction information via type of user
-function orderFetchAll($id)
+function orderFetchAll2()
 {
 	global $mysqli,$db_table_prefix; 
 	$stmt = $mysqli->prepare("SELECT 
-		prod_name,
-		prod_category,
-		prod_description,
-		prod_price,
-		supp_id
-		FROM ".$db_table_prefix."product
-		WHERE
-		product_id = ? LIMIT 1");
-		$stmt->bind_param("i", $pid);
-		$stmt->execute();
-		$stmt->bind_result($prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
-		while ($stmt->fetch()){
-			$row[] = array('prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
-		}
+			shipment_id,
+			prod_id,
+			amount,
+			quantity,
+			user_id
+		FROM ".$db_table_prefix."transaction"
+		//WHERE id = ? LIMIT 1
+		);
+	//$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($shipment_id, $prod_id, $amount, $quantity, $user_id);
+	while ($stmt->fetch()){
+		$row = array('shipment_id' => $shipment_id, 'prod_id' => $prod_id, 'amount' => $amount, 'quantity' => $quantity, 'user_id' => $user_id);
+	}
 	$stmt->close();
 	return ($row);
+}
+
+//Retrieve information for all permission levels
+function orderFetchAll()
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		order_id,
+		shipment_id,
+		prod_id,
+		amount,
+		quantity,
+		user_id
+		FROM ".$db_table_prefix."transaction");
+	$stmt->execute();
+	$stmt->bind_result($order_id, $shipment_id, $prod_id, $amount, $quantity, $user_id);
+	while ($stmt->fetch()){
+		$row[] = array('order_id' => $order_id, 'shipment_id' => $shipment_id, 'prod_id' => $prod_id, 'amount' => $amount, 'quantity' => $quantity, 'user_id' => $user_id);
+	}
+	$stmt->close();
+	return ($row);
+}
+
+//Retrieve fetch product id information
+function GetProductName($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		prod_name
+		FROM ".$db_table_prefix."product
+		WHERE
+		prod_id = ?
+		LIMIT 1");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($prod_id);
+	$stmt->fetch();
+	$stmt->close();
+	return $prod_id;
+}
+
+//Retrieve fetch user id information
+function GetCustomerId($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		display_name
+		FROM ".$db_table_prefix."users
+		WHERE
+		id = ?
+		LIMIT 1");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($customer);
+	$stmt->fetch();
+	$stmt->close();
+	return $customer;
+}
+
+//Retrieve fetch user id information
+function GetAddress($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		address,
+		city,
+		region,
+		postalcode
+		FROM ".$db_table_prefix."address
+		WHERE
+		id_address = ?
+		LIMIT 1");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($address, $city, $region, $postalcode);
+	$stmt->fetch();
+	$stmt->close();
+	return $address .",". $city .",". $region .",". $postalcode;
+}
+
+function GetDeliveryStatus($id)
+{
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT 
+		status
+		FROM ".$db_table_prefix."shipment
+		WHERE
+		shipment_id = ?
+		LIMIT 1");
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt->bind_result($status);
+	$stmt->fetch();
+	$stmt->close();
+
+
+	return $status;
+}
+
+//update delivery orders
+function DeliveredOrders($id)
+{
+	$v = 1;
+	global $mysqli,$db_table_prefix;
+	$stmt = $mysqli->prepare("UPDATE ".$db_table_prefix."shipment
+		SET 
+		status = ?
+		WHERE
+		shipment_id = ?");
+	$stmt->bind_param("ii", $v, $id);
+	$result = $stmt->execute();
+	$stmt->close();	
+	return $result;	
 }
 ?>

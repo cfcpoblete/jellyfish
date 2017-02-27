@@ -67,7 +67,7 @@ if(!empty($_POST))
 					$loggedInUser->title = $userdetails["title"];
 					$loggedInUser->displayname = $userdetails["display_name"];
 					$loggedInUser->username = $userdetails["user_name"];
-					
+
 					//Update last sign in
 					$loggedInUser->updateLastSignIn();
 					$_SESSION["userCakeUser"] = $loggedInUser;

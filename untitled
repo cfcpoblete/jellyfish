@@ -1,3 +1,27 @@
+//Retrieve product information via ProductID
+function productFetch()
+{
+    global $mysqli,$db_table_prefix; 
+    $stmt = $mysqli->prepare("SELECT 
+        prod_name,
+        prod_category,
+        prod_description,
+        prod_price,
+        supp_id
+        FROM ".$db_table_prefix."product
+        WHERE
+        product_id = ? LIMIT 1");
+        $stmt->bind_param("i", $pid);
+        $stmt->execute();
+        $stmt->bind_result($prod_name, $prod_category, $prod_description, $prod_price, $supp_id);
+        while ($stmt->fetch()){
+            $row[] = array('prod_name' => $prod_name, 'prod_category' => $prod_category, 'prod_description' => $prod_description, 'prod_price' => $prod_price, 'supp_id' => $supp_id);
+        }
+    $stmt->close();
+    return ($row);
+}
+
+
 quantity on hand = quantity available?
 95% vulnerability
 flow ng documentation is shit

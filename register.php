@@ -19,21 +19,14 @@ if(!empty($_POST))
 
 	$fName = trim($_POST["firstName"]);
 	$lName = trim($_POST["lastName"]);
-	$address = trim($_POST["address"]);
 
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
-	//$captcha = md5($_POST["captcha"]);
-	
-	
-	//if ($captcha != $_SESSION['captcha'])
-	//{
-	//	$errors[] = lang("CAPTCHA_FAIL");
-	//}	
-	// if(!ctype_alnum($username)){
-	// 	$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
-	// }
 
+	$Maddress = trim($_POST["address"]);
+	$MCity = trim($_POST["City"]);
+	$Mregion = trim($_POST["region"]);
+	$MpostalCode = trim($_POST["postalCode"]);
 
 	if(!ctype_alnum($fName)){
 		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
@@ -57,8 +50,10 @@ if(!empty($_POST))
 	}
 	//End data validation
 	if(count($errors) == 0)
-	{	
-		$disId = addCustomer($fName,$lName,$address);
+	{
+		
+		$disId = addCustomer($fName,$lName,$Maddress);
+		$addId = addAddress($disId,$Maddress,$MCity,$Mregion,$MpostalCode);
 
 		//Construct a user object
 		$user = new User($username,$disId,$password,$email);
@@ -119,6 +114,19 @@ echo "
   <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
     <input class='mdl-textfield__input' type='text' name='address' id='address'>
     <label class='mdl-textfield__label' for='address'>Address</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='City' id='City'>
+    <label class='mdl-textfield__label' for='City'>City</label>
+  </div><br>
+   <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='region' id='region'>
+    <label class='mdl-textfield__label' for='region'>Region</label>
+  </div><br>
+  <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
+    <input class='mdl-textfield__input' type='text' name='postalCode' pattern='-?[0-9]*(\.[0-9]+)?' id='postalCode'>
+    <label class='mdl-textfield__label' for='postalCode'>Postal Code</label>
+    <span class='mdl-textfield__error'>Input is not a number!</span>
   </div><br>
   <div class='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
     <input class='mdl-textfield__input' type='text' name='contactNumber' pattern='-?[0-9]*(\.[0-9]+)?' id='contactNumber'>

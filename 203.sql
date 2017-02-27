@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2017 at 06:16 AM
+-- Generation Time: Feb 27, 2017 at 07:13 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.6.21
 
@@ -33,6 +33,14 @@ CREATE TABLE `uc_address` (
   `region` varchar(45) NOT NULL,
   `postalcode` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `uc_address`
+--
+
+INSERT INTO `uc_address` (`id_address`, `address`, `city`, `region`, `postalcode`) VALUES
+(1, 'something', 'manila', 'Metromanila', '1111'),
+(10, '101 building', 'BGC', 'NCR', '111');
 
 -- --------------------------------------------------------
 
@@ -82,8 +90,7 @@ CREATE TABLE `uc_customer` (
 --
 
 INSERT INTO `uc_customer` (`customer_id`, `customer_lname`, `customer_fname`, `customer_address`, `customer_email`) VALUES
-(6, 'film', 'man', 'filmman@gmail.com', ''),
-(7, 'test', 'employee', '', '');
+(10, 'test', 'user', '101 building', '');
 
 -- --------------------------------------------------------
 
@@ -253,7 +260,10 @@ CREATE TABLE `uc_product` (
 
 INSERT INTO `uc_product` (`prod_id`, `prod_description`, `prod_category`, `prod_name`, `prod_price`, `supp_id`) VALUES
 (1, 'asd', 'asd', 'asd', '10.00', 1),
-(2, 'Ice', 'bits and pieces of ice', 'Crushed Ice', '100.00', 1);
+(2, 'Ice', 'bits and pieces of ice', 'Crushed Ice', '100.00', 1),
+(3, 'Villian', 'Ice Villain', 'Mr. Freeze', '1000.00', 2),
+(4, 'Ice', 'Tears of Shiva', 'Ice Ice Baby', '1000.00', 2),
+(5, 'Ice', 'Ice', 'Ice Monster', '33.10', 2);
 
 -- --------------------------------------------------------
 
@@ -263,8 +273,22 @@ INSERT INTO `uc_product` (`prod_id`, `prod_description`, `prod_category`, `prod_
 
 CREATE TABLE `uc_shipment` (
   `shipment_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL
+  `customer_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `uc_shipment`
+--
+
+INSERT INTO `uc_shipment` (`shipment_id`, `customer_id`, `status`) VALUES
+(12, 1, 1),
+(13, 1, 1),
+(14, 1, 0),
+(15, 6, 0),
+(16, 6, 0),
+(17, 7, 0),
+(18, 7, 0);
 
 -- --------------------------------------------------------
 
@@ -284,7 +308,8 @@ CREATE TABLE `uc_supplier` (
 --
 
 INSERT INTO `uc_supplier` (`supp_id`, `supp_name`, `supp_address`, `supp_contact`) VALUES
-(1, 'Microsoft', 'antartica', '09122222222');
+(1, 'Microsoft', 'antartica', '09122222222'),
+(2, 'Batman', 'Gotham', '911');
 
 -- --------------------------------------------------------
 
@@ -297,9 +322,23 @@ CREATE TABLE `uc_transaction` (
   `shipment_id` int(11) NOT NULL,
   `prod_id` int(11) NOT NULL,
   `amount` decimal(9,2) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `emp_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `uc_transaction`
+--
+
+INSERT INTO `uc_transaction` (`order_id`, `shipment_id`, `prod_id`, `amount`, `quantity`, `time`, `user_id`) VALUES
+(7, 12, 2, '100.00', 2, '2017-02-27 10:37:37', 1),
+(8, 13, 1, '10.00', 1, '2017-02-27 10:37:37', 1),
+(9, 14, 2, '100.00', 2, '2017-02-27 10:37:37', 1),
+(10, 15, 1, '10.00', 1, '2017-02-27 17:56:13', 6),
+(11, 16, 2, '100.00', 2, '2017-02-27 17:56:13', 6),
+(12, 17, 2, '100.00', 2, '2017-02-27 18:11:53', 7),
+(13, 18, 2, '100.00', 2, '2017-02-27 18:11:53', 7);
 
 -- --------------------------------------------------------
 
@@ -327,9 +366,8 @@ CREATE TABLE `uc_users` (
 --
 
 INSERT INTO `uc_users` (`id`, `user_name`, `display_name`, `password`, `email`, `activation_token`, `last_activation_request`, `lost_password_request`, `active`, `title`, `sign_up_stamp`, `last_sign_in_stamp`) VALUES
-(1, 'admin', 'admin', '7f5c26009b4e6dc747e55327a52c74721e114ace7945bfb007429dc9d1c6b29b4', 'cfcpoblete@gmail.com', '8274eb23ad4ad466d3974d55f17c2603', 1486541271, 0, 1, 'New Member', 1486541271, 1488080807),
-(3, 'filmman@gmail.com', '6', '0d62a7560828a2584c3db8920701c4277565f12c9dea5682806c5a3cbb65518c3', 'filmman@gmail.com', '17ab731cbe764c40b1d75b3b1a21739d', 1487953501, 0, 1, 'New Member', 1487953501, 0),
-(4, '', '7', '97e9119b96162454075fa0bec0f0928a66a8d760bdbf813a244ec9b7fbf87e173', 'testemployee@mail.com', '26155dae393d87f09c74ac9ab66bcee3', 1488080166, 0, 1, 'New Member', 1488080166, 1488080189);
+(1, 'admin', 'admin', '7f5c26009b4e6dc747e55327a52c74721e114ace7945bfb007429dc9d1c6b29b4', 'cfcpoblete@gmail.com', '8274eb23ad4ad466d3974d55f17c2603', 1486541271, 0, 1, 'New Member', 1486541271, 1488219078),
+(7, 'test@user.com', '10', '5f1ffea30ccad8a727a47fa68d699c67ad953ca74e05d4836ae89afc4bc778361', 'test@user.com', '72b9cb71f1ab533de58359b0ea68166a', 1488218961, 0, 1, 'New Member', 1488218961, 1488219106);
 
 -- --------------------------------------------------------
 
@@ -362,7 +400,12 @@ INSERT INTO `uc_user_permission_matches` (`id`, `user_id`, `permission_id`) VALU
 (12, 0, 1),
 (13, 2, 1),
 (14, 3, 1),
-(15, 4, 1);
+(15, 4, 1),
+(16, 5, 1),
+(17, 6, 1),
+(18, 6, 2),
+(19, 7, 1),
+(20, 7, 2);
 
 --
 -- Indexes for dumped tables
@@ -472,7 +515,7 @@ ALTER TABLE `uc_user_permission_matches`
 -- AUTO_INCREMENT for table `uc_address`
 --
 ALTER TABLE `uc_address`
-  MODIFY `id_address` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_address` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `uc_configuration`
 --
@@ -482,7 +525,7 @@ ALTER TABLE `uc_configuration`
 -- AUTO_INCREMENT for table `uc_customer`
 --
 ALTER TABLE `uc_customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `uc_employee`
 --
@@ -522,32 +565,32 @@ ALTER TABLE `uc_permission_page_matches`
 -- AUTO_INCREMENT for table `uc_product`
 --
 ALTER TABLE `uc_product`
-  MODIFY `prod_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `prod_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `uc_shipment`
 --
 ALTER TABLE `uc_shipment`
-  MODIFY `shipment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `shipment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `uc_supplier`
 --
 ALTER TABLE `uc_supplier`
-  MODIFY `supp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `supp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `uc_transaction`
 --
 ALTER TABLE `uc_transaction`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `uc_users`
 --
 ALTER TABLE `uc_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `uc_user_permission_matches`
 --
 ALTER TABLE `uc_user_permission_matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
